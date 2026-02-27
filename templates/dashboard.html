@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartFarm Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <h1>Smart Farm</h1>
+            <span id="mode-badge" class="badge badge-mock">MOCK</span>
+        </div>
+        <div class="header-right">
+            <span id="clock-date"></span>
+            <span id="clock-time"></span>
+            <a href="/logout">로그아웃</a>
+        </div>
+    </div>
+
+    <!-- Main 3-Column Layout -->
+    <div class="main">
+        <!-- Left: Zone Cards -->
+        <div class="zone-list" id="zone-list">
+            <!-- rendered by JS -->
+        </div>
+
+        <!-- Center: Chart + System -->
+        <div class="center-col">
+            <div class="panel">
+                <div class="panel-title" id="chart-title">구역 추이 (12시간)</div>
+                <div class="chart-container">
+                    <canvas id="main-chart"></canvas>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">시스템 상태</div>
+                <div class="system-grid">
+                    <div class="sys-item">
+                        <div class="sys-label">CPU 온도</div>
+                        <div class="sys-value" id="sys-cpu">--</div>
+                    </div>
+                    <div class="sys-item">
+                        <div class="sys-label">가동 시간</div>
+                        <div class="sys-value" id="sys-uptime">--</div>
+                    </div>
+                    <div class="sys-item">
+                        <div class="sys-label">온라인 노드</div>
+                        <div class="sys-value" id="sys-nodes">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: AI Logs -->
+        <div>
+            <div class="panel">
+                <div class="panel-title">AI 제어 로그</div>
+                <div class="ai-log-list" id="ai-log-list">
+                    <div class="ai-summary">AI 로그가 아직 없습니다.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
