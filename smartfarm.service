@@ -1,0 +1,18 @@
+[Unit]
+Description=Smart Farm Server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=berry
+WorkingDirectory=/home/berry/workspace/smartfarm
+Environment=PATH=/home/berry/workspace/smartfarm/venv/bin:/usr/bin
+ExecStart=/home/berry/workspace/smartfarm/venv/bin/python app.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

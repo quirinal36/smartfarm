@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartFarm - 로그인</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #0f0f1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-box {
+            background: #1a1a2e;
+            border: 1px solid #2a2a4a;
+            border-radius: 16px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        .login-box h1 {
+            font-size: 1.5rem;
+            color: #4ecca3;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .login-box .subtitle {
+            text-align: center;
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-bottom: 6px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #0f0f1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            font-family: 'Noto Sans KR', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus {
+            border-color: #4ecca3;
+        }
+        .error {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #4ecca3;
+            border: none;
+            border-radius: 8px;
+            color: #0f0f1a;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background: #3dbb91;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h1>Smart Farm</h1>
+        <p class="subtitle">비닐하우스 모니터링 시스템</p>
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
+        <form method="POST">
+            <div class="form-group">
+                <label for="username">아이디</label>
+                <input type="text" id="username" name="username" autocomplete="username" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" name="password" autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="btn">로그인</button>
+        </form>
+    </div>
+</body>
+</html>

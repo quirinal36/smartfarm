@@ -4,135 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartFarm Dashboard</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #1a1a2e;
-            color: #eee;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            color: #4ecca3;
-        }
-
-        .status {
-            font-size: 0.85rem;
-            color: #888;
-            margin-bottom: 40px;
-        }
-
-        .status .mode {
-            color: #f0a500;
-            font-weight: bold;
-        }
-
-        .cards {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .card {
-            background: #16213e;
-            border-radius: 20px;
-            padding: 40px 50px;
-            text-align: center;
-            min-width: 240px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-            transition: transform 0.2s;
-        }
-
-        .card:hover { transform: translateY(-4px); }
-
-        .card .icon { font-size: 3rem; margin-bottom: 15px; }
-
-        .card .label {
-            font-size: 0.9rem;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-        }
-
-        .card .value {
-            font-size: 3.5rem;
-            font-weight: 700;
-        }
-
-        .card .unit {
-            font-size: 1.2rem;
-            color: #888;
-            margin-left: 4px;
-        }
-
-        .card.temp .value { color: #ff6b6b; }
-        .card.humid .value { color: #4ecdc4; }
-
-        .updated {
-            margin-top: 40px;
-            font-size: 0.8rem;
-            color: #555;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>SmartFarm Dashboard</h1>
-    <div class="status">
-        <span id="mode"></span>
-    </div>
-
-    <div class="cards">
-        <div class="card temp">
-            <div class="icon">🌡️</div>
-            <div class="label">온도</div>
-            <div>
-                <span class="value" id="temp">--</span>
-                <span class="unit">°C</span>
-            </div>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <h1>Smart Farm</h1>
+            <span id="mode-badge" class="badge badge-mock">MOCK</span>
         </div>
-        <div class="card humid">
-            <div class="icon">💧</div>
-            <div class="label">습도</div>
-            <div>
-                <span class="value" id="humid">--</span>
-                <span class="unit">%</span>
-            </div>
+        <div class="header-right">
+            <span id="clock-date"></span>
+            <span id="clock-time"></span>
+            <a href="/logout">로그아웃</a>
         </div>
     </div>
 
-    <div class="updated">마지막 업데이트: <span id="time">-</span></div>
+    <!-- Main 3-Column Layout -->
+    <div class="main">
+        <!-- Left: Zone Cards -->
+        <div class="zone-list" id="zone-list">
+            <!-- rendered by JS -->
+        </div>
 
-    <script>
-        async function fetchData() {
-            try {
-                const res = await fetch('/api/sensor');
-                const data = await res.json();
+        <!-- Center: Chart + System -->
+        <div class="center-col">
+            <div class="panel">
+                <div class="panel-title" id="chart-title">구역 추이 (12시간)</div>
+                <div class="chart-container">
+                    <canvas id="main-chart"></canvas>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">시스템 상태</div>
+                <div class="system-grid">
+                    <div class="sys-item">
+                        <div class="sys-label">CPU 온도</div>
+                        <div class="sys-value" id="sys-cpu">--</div>
+                    </div>
+                    <div class="sys-item">
+                        <div class="sys-label">가동 시간</div>
+                        <div class="sys-value" id="sys-uptime">--</div>
+                    </div>
+                    <div class="sys-item">
+                        <div class="sys-label">온라인 노드</div>
+                        <div class="sys-value" id="sys-nodes">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                document.getElementById('temp').textContent =
-                    data.temperature !== null ? data.temperature : '--';
-                document.getElementById('humid').textContent =
-                    data.humidity !== null ? data.humidity : '--';
-                document.getElementById('mode').textContent =
-                    data.mock ? '⚠ Mock 데이터 (센서 미연결)' : '✅ 센서 연결됨';
-                document.getElementById('time').textContent =
-                    new Date().toLocaleTimeString('ko-KR');
-            } catch (e) {
-                document.getElementById('mode').textContent = '❌ 서버 연결 실패';
-            }
-        }
+        <!-- Right: AI Logs -->
+        <div>
+            <div class="panel">
+                <div class="panel-title">AI 제어 로그</div>
+                <div class="ai-log-list" id="ai-log-list">
+                    <div class="ai-summary">AI 로그가 아직 없습니다.</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        fetchData();
-        setInterval(fetchData, 3000);
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 </body>
 </html>
