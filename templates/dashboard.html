@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartFarm Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #4ecca3;
+        }
+
+        .status {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 40px;
+        }
+
+        .status .mode {
+            color: #f0a500;
+            font-weight: bold;
+        }
+
+        .cards {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .card {
+            background: #16213e;
+            border-radius: 20px;
+            padding: 40px 50px;
+            text-align: center;
+            min-width: 240px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+
+        .card:hover { transform: translateY(-4px); }
+
+        .card .icon { font-size: 3rem; margin-bottom: 15px; }
+
+        .card .label {
+            font-size: 0.9rem;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .card .value {
+            font-size: 3.5rem;
+            font-weight: 700;
+        }
+
+        .card .unit {
+            font-size: 1.2rem;
+            color: #888;
+            margin-left: 4px;
+        }
+
+        .card.temp .value { color: #ff6b6b; }
+        .card.humid .value { color: #4ecdc4; }
+
+        .updated {
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>SmartFarm Dashboard</h1>
+    <div class="status">
+        <span id="mode"></span>
+    </div>
+
+    <div class="cards">
+        <div class="card temp">
+            <div class="icon">🌡️</div>
+            <div class="label">온도</div>
+            <div>
+                <span class="value" id="temp">--</span>
+                <span class="unit">°C</span>
+            </div>
+        </div>
+        <div class="card humid">
+            <div class="icon">💧</div>
+            <div class="label">습도</div>
+            <div>
+                <span class="value" id="humid">--</span>
+                <span class="unit">%</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="updated">마지막 업데이트: <span id="time">-</span></div>
+
+    <script>
+        async function fetchData() {
+            try {
+                const res = await fetch('/api/sensor');
+                const data = await res.json();
+
+                document.getElementById('temp').textContent =
+                    data.temperature !== null ? data.temperature : '--';
+                document.getElementById('humid').textContent =
+                    data.humidity !== null ? data.humidity : '--';
+                document.getElementById('mode').textContent =
+                    data.mock ? '⚠ Mock 데이터 (센서 미연결)' : '✅ 센서 연결됨';
+                document.getElementById('time').textContent =
+                    new Date().toLocaleTimeString('ko-KR');
+            } catch (e) {
+                document.getElementById('mode').textContent = '❌ 서버 연결 실패';
+            }
+        }
+
+        fetchData();
+        setInterval(fetchData, 3000);
+    </script>
+</body>
+</html>
